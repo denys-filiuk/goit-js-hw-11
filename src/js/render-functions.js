@@ -1,4 +1,7 @@
-export function renderSearchCard(images) {
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
+export async function renderSearchCard(images) {
   if (!images.length) return;
 
   const gallery = document.querySelector('.gallery');
@@ -15,8 +18,8 @@ export function renderSearchCard(images) {
         downloads,
       }) => `
         <li class="galleryCard">
-          <a href="${largeImageURL}" >
-            <img class="img" src="${webformatURL}" alt="${tags}" >
+          <a href="${largeImageURL}">
+            <img class="img" src="${webformatURL}" alt="${tags}">
           </a>
           <ul class="attributesList">
             <li class="attributesItem"><span class="attributesLabel">Likes</span><br>${likes}</li>
@@ -30,4 +33,18 @@ export function renderSearchCard(images) {
     .join('');
 
   gallery.insertAdjacentHTML('beforeend', markup);
+
+  await new Promise(resolve => requestAnimationFrame(resolve));
+
+  let lightbox;
+  if (!lightbox) {
+    lightbox = new SimpleLightbox('.gallery a', {
+      captions: true,
+      captionsData: 'alt',
+      captionPosition: 'bottom',
+      captionDelay: 250,
+    });
+  } else {
+    lightbox.refresh();
+  }
 }
